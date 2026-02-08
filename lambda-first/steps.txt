@@ -1,0 +1,53 @@
+----###----DO NOT FORGET TO CLEANUP----###----
+
+AWS_console (us-east-1) -> Lambda -> Dashboard -> Create Function -> Use Blueprint
+    Blueprint Name : Getting Started with Lambda HTTP
+    Blueprint Description : Learn about Lambda by creating an HTTP endpoint that outputs a server-side rendered web page.
+    Function Name : <first-lambda>
+    Runtime : nodejs22.x
+    Architecture : x86_64
+    Execution role : Create a new role with basic Lambda permissions.
+                     An IAM role "first-lambda-role-xxxxxxxx", with permission to upload logs to Amazon CloudWatch Logs will be created.
+    Function URL : ✅ Acknowledgment
+                   Create a public URL with rate limit. You will be billed for url hits and traffic
+Create Function.
+Try the Function URL in New Tab.
+
+
+AWS_console (us-east-1) -> DynamoDB -> Create Table
+    Table Name : <first-dynamodb>
+    Partition Key : Name=PK, type=string
+    Sort Key : Name=SK, type=string
+    Table Settings : Default
+Create Table
+Copy ARN to be used for updating role policy
+
+
+AWS_console -> IAM -> Roles -> first-lambda-role-xxxxxxxx
+    Permissions -> Add Permissions -> Create Inline policy
+        Service : DynamoDB
+        Actions : PutItem(write), Query(read)
+        Resources -> Specific -> table -> Add ARN (Text) : <paste arn of first-dynamodb>
+    Next
+        Policy Name : <dynamodb-policy>
+    Create Policy
+
+
+AWS_console (us-east-1) -> Lambda -> Functions -> first-lambda
+    Code : Update index.html. Known changes are in between L120 - L132 of the copy in pwd
+           Update index.mjs. Less than 20% is og content.
+    Deploy
+
+
+Try the Function URL in New Tab.
+    Inset data into form and click Submit
+    Notice query being inserted into the URL
+    Data passed into form must be shown in same page
+    Check DynamoDB Table items to see form data storage
+        AWS_console (us-east-1) -> DynamoDB -> Explore Items -> first-dynamodb
+
+CLEANUP
+AWS_console (us-east-1) -> Lambda -> Functions -> ✅first-lambda -> Actions -> Delete -> confirm
+AWS_console (us-east-1) -> CloudWatch -> Logs -> Log Management -> ✅/aws/lambda/first-lambda -> Delete log group -> confirm
+AWS_console -> IAM -> Roles -> ✅first-lambda-role-xxxxxxxx -> Delete -> confirm
+AWS_console (us-east-1) -> DynamoDB -> Tables -> ✅first-dynamodb -> Delete -> confirm
