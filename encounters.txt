@@ -1,0 +1,22 @@
+A web server t3a.medium 2vCPU 4gbRAM become non-responsive due to 100% memory useage. 
+Could not open SSH. Had to Reboot. Issue repeats once in 1-3 weeks without any pattern.
+No corresponding inbound traffic, cpu, I/O, storage, spikes or anomalies were found.
+The main process in server was apache2
+    #ps aux | head
+    #ps aux | grep apache
+    #systemctl status apache2.service
+        ->Get PPID(parent process ID)
+    #ps -p <PPID>--ppid <PPID> -o user,%cpu,%mem,etime,cmd | awk '{cpu+=$1; mem+=$2} END {print "Total CPU: "cpu"%, Total Mem: "mem"%"}'
+Decided to set memory limit on apache and monitor if it can resolve the stability issue.
+Credit : https://oneuptime.com/blog/post/2026-03-02-setup-systemd-resource-control-memorymax-ubuntu/view
+    #systemctl status apache2.service
+        ->Get path to "Loaded" service and "Drop-In" config
+    #vim <Drop-In path>/memory-limit.conf
+        ->[Service]
+        ->MemoryHigh=2850M
+        ->MemoryMax=3130M
+        ->Restart=on-failure
+    #systemctl daemon-reload
+    #systemctl show apache2.service -p MemoryMax -p MemoryHigh -p Restart
+    #systemctl restart apache2
+Watch for Memory alerts from Web server
