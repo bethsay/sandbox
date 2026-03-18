@@ -1,0 +1,47 @@
+WSL - via PowerShell
+---------------------------------------------
+wsl --install
+	Reboot your PC
+wsl --status
+wsl --help
+wsl -v
+wsl --list
+wsl -l --online
+wsl -l --running
+
+Install Ubuntu or other Distros
+---------------------------------------------
+wsl -l --online
+wsl --install <Distro_Name>
+wsl --install Ubuntu
+	#cat /etc/os-release
+	#sudo apt update && sudo apt upgrade
+	#exit
+wsl -l --running
+
+Connect to Existing Distros
+---------------------------------------------
+Start->PowerShell->NewTab(FromTheDropdown)->Ubuntu(Distro_Name)
+---OR---
+wsl -l
+wsl -d <distro_name>
+wsl -d ubuntu
+---OR---
+VScode->OpenRemoteWindows(BottomLeftCorner)->ConnectToWSL(UsingDistro)
+
+Backup(Snapshot) and Restore any distro
+---------------------------------------------
+wsl --export <Distro_Name> <path/to/snapshot>
+wsl --export Ubuntu C:\Users\<Your.Name>\AppData\Local\wsl\Exports\First-Export.tar
+wsl --import <Custom_Distro_Name> <path/to/DistoVolume> <path/to/snapshot>
+wsl --import First-Import C:\Users\<Your.Name>\AppData\Local\wsl\First-Import C:\Users\bethsay.tom\AppData\Local\wsl\Exports\First-Export.tar
+	ReOpen PowerShell Window and Connect to Existing Distros
+
+
+Delete(Reinstall) Distro
+---------------------------------------------
+wsl --unregister <Distro_name>
+wsl --unregister First-Import
+wsl --unregister Ubuntu
+wsl --install Ubuntu
+	ReOpen PowerShell Window and Connect to Existing Distros
