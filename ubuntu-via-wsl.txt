@@ -29,6 +29,13 @@ wsl -d ubuntu
 ---OR---
 VScode->OpenRemoteWindows(BottomLeftCorner)->ConnectToWSL(UsingDistro)
 
+Restart(Shutdown) a running Distro
+---------------------------------------------
+wsl -l --running
+wsl --terminate <Distro_Name>
+wsl -t Ubuntu
+	Press ENTER key in PowerShell DistroTab or Connect to Existing Distros
+
 Backup(Snapshot) and Restore any distro
 ---------------------------------------------
 wsl --export <Distro_Name> <path/to/snapshot>
