@@ -1,0 +1,18 @@
+Kubernetes is trying to pull locally exiting image from docker.io/library.
+This issue could have been avoided if kubeadm cluster was selected instead of kind cluster in Docker Desktop.
+Ensure the option Show system containers (advanced) is enabled in Docker Desktop.
+To solve this I had to export image, copy it into the kind-control-plane container, import image.
+    #docker ps
+    #docker images
+    #docker save myname/myimage:v0.0.1 -o ../image.tar
+    #docker cp ../image.tar desktop-control-plane:/image.tar
+    #docker exec desktop-control-plane ctr namespace list
+    #docker exec desktop-control-plane ctr -n k8s.io images import /image.tar
+    #docker exec desktop-control-plane crictl images
+During ctr import if you forget -n k8s.io the import will be done into a newly created ctr-namespace called default. The image will not be available for use by crictl or by Kubernetes.
+    #docker exec desktop-control-plane ctr images import /image.tar
+    #docker exec desktop-control-plane crictl images
+    #docker exec desktop-control-plane ctr namespace list
+    #docker exec desktop-control-plane ctr -n default images ls
+    #docker exec desktop-control-plane ctr -n default images rm docker.io/myname/myimage:v0.0.1
+    #docker exec desktop-control-plane ctr namespace rm default
